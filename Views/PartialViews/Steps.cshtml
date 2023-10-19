@@ -1,0 +1,70 @@
+﻿@model TestCase
+@{
+    int rows = Model.StepsCounter;
+    if (rows == 0) rows = 1;
+}
+<div class="form-group" width ="100%">
+    <label asp-for="Steps" class="control-label"></label>
+    <div style="display: flex;" cols="150">
+        <textarea id="newNumbersTextArea" cols="3" rows="@rows" ></textarea>
+        <textarea id="myTextArea" asp-for="Steps" rows="@rows" cols="147"></textarea>
+    </div>
+    <div class="form-group form-check">
+    <span asp-validation-for="Steps" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="col-md-4">
+<div class="form-group">
+    <label asp-for="StepsCounter" class="control-label"></label>
+    <input id="characterCounter" asp-for="StepsCounter" class="form-control" />
+    <span asp-validation-for="StepsCounter" class="text-danger"></span>
+</div>
+</div>
+<script>
+    var textArea = document.getElementById("myTextArea");
+    var characterCounter = document.getElementById("characterCounter");
+    var newNumbersTextArea = document.getElementById("newNumbersTextArea");
+
+    var text = textArea.value;
+        var specificChar = '\n';
+        var counter = (text.match(new RegExp(specificChar, "g")) || []).length;
+        counter++;
+        characterCounter.value = counter;
+
+        textArea.rows = counter;
+        newNumbersTextArea.rows = counter;
+        // Generate numbers from 1 to N in the new text area.
+        var numbers = '';
+        for (var i = 1; i <= counter; i++) {
+            if(i == counter){
+                numbers += i ;
+            }
+            else{
+                numbers += i + "\n";
+            }
+        }
+        newNumbersTextArea.value = numbers;
+
+    textArea.addEventListener("input", function() {
+        var text = textArea.value;
+        var specificChar = '\n';
+        var counter = (text.match(new RegExp(specificChar, "g")) || []).length;
+        counter++;
+        characterCounter.value = counter;
+
+        textArea.rows = counter;
+        newNumbersTextArea.rows = counter;
+        // Generate numbers from 1 to N in the new text area.
+        var numbers = '';
+        for (var i = 1; i <= counter; i++) {
+            if(i == counter){
+                numbers += i ;
+            }
+            else{
+                numbers += i + "\n";
+            }
+        }
+        newNumbersTextArea.value = numbers;
+    });
+</script>

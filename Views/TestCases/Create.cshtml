@@ -1,0 +1,28 @@
+﻿@model TestCases.Models.TestCase
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>TestCase</h4>
+<hr />
+<div class="row">
+    <div>
+        <form asp-action="Create">
+            @Html.Partial("/Views/PartialViews/TestCaseForm.cshtml", Model)
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

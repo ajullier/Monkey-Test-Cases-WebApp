@@ -1,0 +1,31 @@
+﻿@model TestCase
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="col-md-4">
+    <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StateID" class="control-label"></label>
+                <select asp-for="StateID" class ="form-control" asp-items="ViewBag.StateID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewID" class="control-label"></label>
+                <select asp-for="ViewID" class ="form-control" asp-items="ViewBag.ViewID"></select>
+            </div>
+</div>            
+    @Html.Partial("/Views/PartialViews/Steps.cshtml", Model)
+            <p></p>
+<div class="col-md-4">
+
+    @Html.Partial("/Views/PartialViews/DataSet.cshtml", Model)
+            <p></p>
+    @Html.Partial("/Views/PartialViews/Comments.cshtml", Model)
+            <p></p>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Automated" /> @Html.DisplayNameFor(model => model.Automated)
+                </label>
+            </div>
+</div>

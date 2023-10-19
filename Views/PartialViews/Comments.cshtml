@@ -1,0 +1,19 @@
+﻿@model TestCase
+<div class="form-group">
+    <label asp-for="Comments" class="control-label"></label>
+    <textarea id="myCommentsTextArea" asp-for="Comments" rows="5" cols="150"></textarea>
+    <span asp-validation-for="Comments" class="text-danger"></span>
+</div>
+
+<script>
+    var textAreaComments = document.getElementById("myCommentsTextArea");
+
+    textAreaComments.addEventListener("input", function() {
+        var textComments = textAreaComments.value;
+        var specificCharComments = '\n';
+        var counterComments = (textComments.match(new RegExp(specificCharComments, "g")) || []).length;
+        counterComments++;
+
+        textAreaComments.rows = counterComments;
+    });
+</script>

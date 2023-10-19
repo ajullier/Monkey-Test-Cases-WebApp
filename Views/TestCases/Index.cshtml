@@ -1,0 +1,85 @@
+﻿@model IEnumerable<TestCases.Models.TestCase>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form method="get">
+    <label for="descriptionFilter">Type a Description:</label>
+    <input type="text" id="descriptionFilter" name="descriptionFilter" value="@ViewBag.Description"/>
+    <p></p>
+    <label for="viewFilter">Select a View:</label>
+    <select id="viewFilter" name="viewFilter" asp-items="ViewBag.ViewID" value ="@this.Context.Request.Query["viewFilter"]"></select>
+    <p></p>
+    <label for="stateFilter">Select a State:</label>
+    <select id="stateFilter" name="stateFilter" asp-items="ViewBag.StateID"></select>
+    <p></p>
+    <label for="idFilter">Type an ID (0 for none):</label>
+    <input type="number" id="idFilter" name="idFilter" value="@ViewBag.Id"/>
+    <p></p>
+    <button type="submit">Apply Filters</button>
+</form>
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.View)
+            </th>
+            <th>
+                Navigation
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var modelFiltered = Model;
+            string parameterFilter = this.Context.Request.Query["descriptionFilter"];
+            if(parameterFilter is not null)
+            {
+                modelFiltered = modelFiltered.Where(item => item.Description.Contains(parameterFilter));
+            }
+        }
+        @foreach (var item in modelFiltered)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.View.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.View.Navigation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

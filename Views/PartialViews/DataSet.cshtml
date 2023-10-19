@@ -1,0 +1,19 @@
+﻿@model TestCase
+<div class="form-group">
+    <label asp-for="DataSet" class="control-label"></label>
+    <textarea id="myDataSetTextArea" asp-for="DataSet" rows="5" cols="150"></textarea>
+    <span asp-validation-for="DataSet" class="text-danger"></span>
+</div>
+
+<script>
+    var textAreaDataSet = document.getElementById("myDataSetTextArea");
+
+    textAreaDataSet.addEventListener("input", function() {
+        var textDataSet = textAreaDataSet.value;
+        var specificCharDataSet = '\n';
+        var counterDataSet = (textDataSet.match(new RegExp(specificCharDataSet, "g")) || []).length;
+        counterDataSet++;
+
+        textAreaDataSet.rows = counterDataSet;
+    });
+</script>
