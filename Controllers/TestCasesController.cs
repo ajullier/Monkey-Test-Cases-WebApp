@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 using TestCases.Models;
 
 namespace TestCases.Controllers
@@ -134,14 +135,19 @@ namespace TestCases.Controllers
             {
                 return NotFound();
             }
-
-            var testCase = await _context.TestCases.FindAsync(id);
+            TestCase testCase = await _context.TestCases.FindAsync(id);
+            testCase.Roles.AddRange(_context.TestCases_Roles.Where(a => a.TestCaseId.Equals(id)));
+            testCase.BusinessUnits.AddRange(_context.TestCases_BusinessUnits.Where(a => a.TestCaseID.Equals(id)));
+            
             if (testCase == null)
             {
                 return NotFound();
             }
+            
             ViewData["StateID"] = new SelectList(_context.States, "Id", "Description", testCase.StateID);
             ViewData["ViewID"] = new SelectList(_context.Views, "Id", "Description", testCase.ViewID);
+
+            ViewModels.TestCaseViewModel testCaseViewModel = new(testCase, _context.Roles.ToList(), _context.BusinessUnits.ToList());
             return View(testCase);
         }
 

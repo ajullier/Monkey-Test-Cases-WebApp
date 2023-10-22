@@ -5,7 +5,7 @@
 namespace TestCases.Migrations
 {
     /// <inheritdoc />
-    public partial class Migración1 : Migration
+    public partial class Migration1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,7 +70,12 @@ namespace TestCases.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StateID = table.Column<int>(type: "int", nullable: false),
+                    ViewID = table.Column<int>(type: "int", nullable: false),
                     DataSet = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Steps = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StepsCounter = table.Column<int>(type: "int", nullable: false),
+                    Automated = table.Column<bool>(type: "bit", nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -82,24 +87,10 @@ namespace TestCases.Migrations
                         principalTable: "States",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Steps",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestCaseID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Steps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Steps_TestCases_TestCaseID",
-                        column: x => x.TestCaseID,
-                        principalTable: "TestCases",
+                        name: "FK_TestCases_Views_ViewID",
+                        column: x => x.ViewID,
+                        principalTable: "Views",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -108,14 +99,11 @@ namespace TestCases.Migrations
                 name: "TestCases_BusinessUnits",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BusinessUnitID = table.Column<int>(type: "int", nullable: false),
-                    TestCaseID = table.Column<int>(type: "int", nullable: false)
+                    TestCaseID = table.Column<int>(type: "int", nullable: false),
+                    BusinessUnitID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestCases_BusinessUnits", x => x.Id);
                     table.ForeignKey(
                         name: "FK_TestCases_BusinessUnits_BusinessUnits_BusinessUnitID",
                         column: x => x.BusinessUnitID,
@@ -134,14 +122,11 @@ namespace TestCases.Migrations
                 name: "TestCases_Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleID = table.Column<int>(type: "int", nullable: false),
-                    TestCaseID = table.Column<int>(type: "int", nullable: false)
+                    TestCaseId = table.Column<int>(type: "int", nullable: false),
+                    RoleID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestCases_Roles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_TestCases_Roles_Roles_RoleID",
                         column: x => x.RoleID,
@@ -149,48 +134,22 @@ namespace TestCases.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TestCases_Roles_TestCases_TestCaseID",
-                        column: x => x.TestCaseID,
+                        name: "FK_TestCases_Roles_TestCases_TestCaseId",
+                        column: x => x.TestCaseId,
                         principalTable: "TestCases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "TestCases_Views",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ViewID = table.Column<int>(type: "int", nullable: false),
-                    TestCaseID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestCases_Views", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestCases_Views_TestCases_TestCaseID",
-                        column: x => x.TestCaseID,
-                        principalTable: "TestCases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TestCases_Views_Views_ViewID",
-                        column: x => x.ViewID,
-                        principalTable: "Views",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Steps_TestCaseID",
-                table: "Steps",
-                column: "TestCaseID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestCases_StateID",
                 table: "TestCases",
                 column: "StateID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestCases_ViewID",
+                table: "TestCases",
+                column: "ViewID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestCases_BusinessUnits_BusinessUnitID",
@@ -208,35 +167,19 @@ namespace TestCases.Migrations
                 column: "RoleID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestCases_Roles_TestCaseID",
+                name: "IX_TestCases_Roles_TestCaseId",
                 table: "TestCases_Roles",
-                column: "TestCaseID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestCases_Views_TestCaseID",
-                table: "TestCases_Views",
-                column: "TestCaseID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestCases_Views_ViewID",
-                table: "TestCases_Views",
-                column: "ViewID");
+                column: "TestCaseId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Steps");
-
-            migrationBuilder.DropTable(
                 name: "TestCases_BusinessUnits");
 
             migrationBuilder.DropTable(
                 name: "TestCases_Roles");
-
-            migrationBuilder.DropTable(
-                name: "TestCases_Views");
 
             migrationBuilder.DropTable(
                 name: "BusinessUnits");
@@ -248,10 +191,10 @@ namespace TestCases.Migrations
                 name: "TestCases");
 
             migrationBuilder.DropTable(
-                name: "Views");
+                name: "States");
 
             migrationBuilder.DropTable(
-                name: "States");
+                name: "Views");
         }
     }
 }

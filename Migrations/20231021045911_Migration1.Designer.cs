@@ -11,8 +11,8 @@ using TestCases.Models;
 namespace TestCases.Migrations
 {
     [DbContext(typeof(TestCasesDbContext))]
-    [Migration("20231011172902_CambioStepsyViews")]
-    partial class CambioStepsyViews
+    [Migration("20231021045911_Migration1")]
+    partial class Migration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,6 +83,12 @@ namespace TestCases.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Automated")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DataSet")
                         .HasColumnType("nvarchar(max)");
 
@@ -95,6 +101,9 @@ namespace TestCases.Migrations
 
                     b.Property<string>("Steps")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StepsCounter")
+                        .HasColumnType("int");
 
                     b.Property<int>("ViewID")
                         .HasColumnType("int");
@@ -110,19 +119,11 @@ namespace TestCases.Migrations
 
             modelBuilder.Entity("TestCases.Models.TestCase_BusinessUnit", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("BusinessUnitID")
                         .HasColumnType("int");
 
                     b.Property<int>("TestCaseID")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("BusinessUnitID");
 
@@ -133,23 +134,15 @@ namespace TestCases.Migrations
 
             modelBuilder.Entity("TestCases.Models.TestCase_Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("RoleID")
                         .HasColumnType("int");
 
-                    b.Property<int>("TestCaseID")
+                    b.Property<int>("TestCaseId")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("RoleID");
 
-                    b.HasIndex("TestCaseID");
+                    b.HasIndex("TestCaseId");
 
                     b.ToTable("TestCases_Roles");
                 });
@@ -201,13 +194,15 @@ namespace TestCases.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TestCases.Models.TestCase", null)
-                        .WithMany("BusinessUnits")
+                    b.HasOne("TestCases.Models.TestCase", "TestCase")
+                        .WithMany()
                         .HasForeignKey("TestCaseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("BusinessUnit");
+
+                    b.Navigation("TestCase");
                 });
 
             modelBuilder.Entity("TestCases.Models.TestCase_Role", b =>
@@ -218,20 +213,15 @@ namespace TestCases.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TestCases.Models.TestCase", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("TestCaseID")
+                    b.HasOne("TestCases.Models.TestCase", "TestCase")
+                        .WithMany()
+                        .HasForeignKey("TestCaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
-                });
 
-            modelBuilder.Entity("TestCases.Models.TestCase", b =>
-                {
-                    b.Navigation("BusinessUnits");
-
-                    b.Navigation("Roles");
+                    b.Navigation("TestCase");
                 });
 #pragma warning restore 612, 618
         }

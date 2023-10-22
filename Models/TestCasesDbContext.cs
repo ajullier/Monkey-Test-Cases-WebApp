@@ -21,7 +21,7 @@ namespace TestCases.Models
         {
                 if (!optionsBuilder.IsConfigured)
                 {
-                    //string conection = "Data Source=monkeytestcases-server.database.windows.net,1433;Initial Catalog=monkeytestcases-database;User ID=monkeytestcases-server-admin;Password=532QNG4FY56C7TN0$";
+                    //string conection = "Data Source=monkeytestcases-server.database.windows.net,1433;Initial Catalog=monkeytestcases-database;User ID=monkeytestcases-server-admin;Password=643POH5GZ67D8UO1%";
                     string conection = "Server=DESKTOP-LOTSMGA\\SQLEXPRESS;Database=TestCasesDb;User Id=MONO;Password=MONO;Encrypt=False;";
                     optionsBuilder.UseSqlServer(conection)
                     .LogTo(Console.WriteLine, new[] {DbLoggerCategory.Database.Command.Name}, Microsoft.Extensions.Logging.LogLevel.Information)

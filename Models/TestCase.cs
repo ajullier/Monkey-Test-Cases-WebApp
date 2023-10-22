@@ -1,4 +1,5 @@
-﻿using TestCases.Models.BaseModels;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using TestCases.Models.BaseModels;
 
 namespace TestCases.Models
 {
@@ -12,8 +13,10 @@ namespace TestCases.Models
         public int StepsCounter { get; set; } = 0;
         public bool Automated { get; set; } = false;
         public string? Comments { get; set; }
-        public virtual ICollection<TestCase_BusinessUnit>? BusinessUnits { get; set; }
-        public virtual ICollection<TestCase_Role>? Roles { get; set; }
+        [NotMapped]
+        public virtual ICollection<TestCase_BusinessUnit>? BusinessUnits { get; set; } = new List<TestCase_BusinessUnit>();
+        [NotMapped]
+        public virtual ICollection<TestCase_Role>? Roles { get; set; } = new List<TestCase_Role>();
         public virtual View? View { get; set; }    
     }
 }
