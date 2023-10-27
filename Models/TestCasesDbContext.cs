@@ -16,15 +16,34 @@ namespace TestCases.Models
         public DbSet<TestCase_Role>? TestCases_Roles { get; set; }
         public DbSet<View>? Views { get; set; }
 
-        protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-        {
+            {
                 if (!optionsBuilder.IsConfigured)
                 {
-                    //string conection = "Data Source=monkeytestcases-server.database.windows.net,1433;Initial Catalog=monkeytestcases-database;User ID=monkeytestcases-server-admin;Password=643POH5GZ67D8UO1%";
-                    string conection = "Server=DESKTOP-LOTSMGA\\SQLEXPRESS;Database=TestCasesDb;User Id=MONO;Password=MONO;Encrypt=False;";
-                    optionsBuilder.UseSqlServer(conection)
-                    .LogTo(Console.WriteLine, new[] {DbLoggerCategory.Database.Command.Name}, Microsoft.Extensions.Logging.LogLevel.Information)
+                    string connectionString = string.Empty;
+                    try
+                    {
+                        // Create an instance of StreamReader to read from a file.
+                        // The using statement also closes the StreamReader.
+                        
+                        using (StreamReader sr = new StreamReader("StringConnection.txt"))
+                        {
+                            
+                            // Read and display lines from the file until the end of
+                            // the file is reached.
+                            connectionString = sr.ReadToEnd();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // Let the user know what went wrong.
+                        Console.WriteLine("The file could not be read:");
+                        Console.WriteLine(e.Message);
+                    }
+
+                    optionsBuilder.UseSqlServer(connectionString)
+                    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, Microsoft.Extensions.Logging.LogLevel.Information)
                     .EnableSensitiveDataLogging();
                 }
             }
